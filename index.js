@@ -43,7 +43,7 @@ app.route('/pool')
     .post(poolController.add)
 
 app.route('/pool/:id')
-    .get(poolController.getAll)
+    .get(poolController.get)
     .put(poolController.update)
     .delete(poolController.remove)
 
@@ -54,7 +54,7 @@ app.route('/theme')
     .post(themeController.add)
 
 app.route('/theme/:id')
-    .get(themeController.getAll)
+    .get(themeController.get)
     .put(themeController.update)
     .delete(themeController.remove)
 
