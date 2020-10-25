@@ -2,43 +2,49 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const {pool} = require('./config')
-
 const app = express()
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 
-const getPosts = (request, response) => {
-  pool.query('SELECT * FROM posts', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
-}
+app.get('/', (req, res) => { res.send('Jonas Petraska IFF 7/2 API <br><br> /posts (GET, POST, PUT, DELETE)')})
 
-const addPost= (request, response) => {
-  const {name, picture, pool_id} = request.body
+app.get('/posts', (req, res) => {
+    pool.query('SELECT * FROM posts', (error, results) => {
+        if (error) throw error
+        res.status(200).json(results.rows)
+      })
+ })
 
-  pool.query(
-    'INSERT INTO posts (name, picture, pool_id) VALUES ($1, $2, $3)',
-    [name, picture, pool_id],
-    (error) => {
-      if (error) {
-        throw error
-      }
-      response.status(201).json({status: 'success', message: 'Post added.'})
-    },
-  )
-}
+ app.post('/posts', (req, res) => {
+    const {name, picture, pool_id} = req.body
+    pool.query( 'INSERT INTO posts (name, picture, pool_id) VALUES ($1, $2, $3)', [name, picture, pool_id], (error) => {
+        if (error) throw error
+        res.status(201).json({status: '201', message: 'Post Created'})
+      },
+    )
+ })
 
-app
-  .route('/posts')
-  // GET endpoint
-  .get(getPosts)
-  // POST endpoint
-  .post(addPost)
+ app.put('/posts/:id', (req, res) => {
+    const {name, picture, pool_id} = req.body
+    pool.query( 'UPDATE posts SET name=$1, picture=$2, pool_id=$3 WHERE id=$4', [name, picture, pool_id, req.params.id], (error) => {
+        if (error) throw error
+        res.status(200).json({status: '200', message: 'Post Updated'})
+      },
+    )
+ })
+
+ app.delete('/posts/:id', (req, res) => {
+     pool.query('DELETE FROM posts WHERE id=$1', [req.params.id], (error) => {
+         if (error) throw error
+         res.status(200).json({status: '200', message: 'Post Deleted'})
+     })
+ })
+
+ 
+
+
+
 
 // Start server
 app.listen(process.env.PORT || 3002, () => {
