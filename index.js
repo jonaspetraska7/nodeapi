@@ -6,51 +6,45 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
+const postController = require('./controllers/postController')
+const poolController = require('./controllers/poolController')
+const themeController = require('./controllers/themeController')
+
 
 app.get('/', (req, res) => { res.send('Jonas Petraska IFF 7/2 API <br><br> /posts (GET, POST, PUT, DELETE)')})
 
-app.get('/posts', (req, res) => {
-    pool.query('SELECT * FROM posts', (error, results) => {
-        if (error) throw error
-        res.status(200).json(results.rows)
-      })
- })
+// Posts
 
- app.get('/posts/:id', (req, res) => {
-    pool.query('SELECT * FROM posts WHERE id=$1', [req.params.id], (error, results) => {
-        if (error) throw error
-        res.status(200).json(results.rows)
-      })
- })
+app.route('/post')
+    .get(postController.getAll)
+    .post(postController.add)
 
- app.post('/posts', (req, res) => {
-    const {name, picture, pool_id} = req.body
-    pool.query( 'INSERT INTO posts (name, picture, pool_id) VALUES ($1, $2, $3)', [name, picture, pool_id], (error) => {
-        if (error) throw error
-        res.status(201).json({status: '201', message: 'Post Created'})
-      },
-    )
- })
+app.route('/post/:id')
+    .get(postController.get)
+    .put(postController.update)
+    .delete(postController.remove)
 
- app.put('/posts/:id', (req, res) => {
-    const {name, picture, pool_id} = req.body
-    pool.query( 'UPDATE posts SET name=$1, picture=$2, pool_id=$3 WHERE id=$4', [name, picture, pool_id, req.params.id], (error) => {
-        if (error) throw error
-        res.status(200).json({status: '200', message: 'Post Updated'})
-      },
-    )
- })
+// Pools
 
- app.delete('/posts/:id', (req, res) => {
-     pool.query('DELETE FROM posts WHERE id=$1', [req.params.id], (error) => {
-         if (error) throw error
-         res.status(200).json({status: '200', message: 'Post Deleted'})
-     })
- })
+app.route('/pool')
+    .get(poolController.getAll)
+    .post(poolController.add)
 
- 
+app.route('/pool/:id')
+    .get(poolController.getAll)
+    .put(poolController.update)
+    .delete(poolController.remove)
 
+// Themes 
 
+app.route('/theme')
+    .get(themeController.getAll)
+    .post(themeController.add)
+
+app.route('/theme/:id')
+    .get(themeController.getAll)
+    .put(themeController.update)
+    .delete(themeController.remove)
 
 
 // Start server
