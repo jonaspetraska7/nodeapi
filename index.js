@@ -16,6 +16,13 @@ app.get('/posts', (req, res) => {
       })
  })
 
+ app.get('/posts/:id', (req, res) => {
+    pool.query('SELECT * FROM posts WHERE id=$1', [req.params.id], (error, results) => {
+        if (error) throw error
+        res.status(200).json(results.rows)
+      })
+ })
+
  app.post('/posts', (req, res) => {
     const {name, picture, pool_id} = req.body
     pool.query( 'INSERT INTO posts (name, picture, pool_id) VALUES ($1, $2, $3)', [name, picture, pool_id], (error) => {
