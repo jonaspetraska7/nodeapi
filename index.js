@@ -14,7 +14,7 @@ const themeController = require('./controllers/themeController')
 app.get('/', (req, res) => { res.send(
 `Jonas Petraska IFF 7/2 API <br><br>
 -- API for a Pinterest type of application: Themes have Pools, Pools have posts <br>
--- Node.js, Express framework, hosted on Heroku + Heroku Postgres DB
+-- Node.js, Express framework, hosted on Heroku + Heroku Postgres DB <br><br>
 
 /post (GET, POST) <br> 
 /post/:id (GET, PUT, DELETE) <br>
