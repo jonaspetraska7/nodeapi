@@ -11,7 +11,17 @@ const poolController = require('./controllers/poolController')
 const themeController = require('./controllers/themeController')
 
 
-app.get('/', (req, res) => { res.send('Jonas Petraska IFF 7/2 API <br><br> /posts (GET, POST, PUT, DELETE)')})
+app.get('/', (req, res) => { res.send(
+`Jonas Petraska IFF 7/2 API <br><br>
+-- API for a Pinterest type of application: Themes have Pools, Pools have posts <br><br>
+/post (GET, POST) <br> 
+/post/:id (GET, PUT, DELETE) <br>
+/pool (GET, POST) <br> 
+/pool/:id (GET, PUT, DELETE) <br>
+/theme (GET, POST) <br> 
+/theme/:id (GET, PUT, DELETE) <br>
+`
+)})
 
 // Posts
 
