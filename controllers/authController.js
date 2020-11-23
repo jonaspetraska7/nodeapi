@@ -2,7 +2,7 @@ const { pool } = require("../config")
 const bodyParser = require('body-parser')
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 const login = (req, res) => {
