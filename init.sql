@@ -31,13 +31,3 @@ ALTER TABLE "posts" ADD FOREIGN KEY ("pool_id") REFERENCES "pools" ("id");
 ALTER TABLE "pools" ADD FOREIGN KEY ("theme_id") REFERENCES "themes" ("id");
 
 ALTER TABLE "pools" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "themes" ADD FOREIGN KEY ("featured_pool_id") REFERENCES "pools" ("id");
-
-ALTER TABLE "pools" ADD FOREIGN KEY ("featured_post_id") REFERENCES "posts" ("id");
-
-INSERT INTO users(username, password, role)
-VALUES ('admin','admin','admin');
-
-INSERT INTO users(username, password, role)
-VALUES ('user','user','user');

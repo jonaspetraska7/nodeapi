@@ -9,7 +9,7 @@ const login = (req, res) => {
     const {username, password} = req.body;
     pool.query('SELECT * FROM users WHERE username=$1', [username], (error, results) => {
         if (error) {
-          return res.send(`DB ${error}`)
+          return res.status(400).json(`DB ${error}`)
         }
         if (results.rows[0] != undefined) {
           bcrypt.compare(password, results.rows[0].password, function(err, authcheck) {
@@ -19,7 +19,7 @@ const login = (req, res) => {
               res.status(200).json(generateToken(results.rows[0].username, results.rows[0].role))
             }
             else {
-              return res.status(200).json("Bad username or password change code")
+              return res.status(401).json("Bad username or password")
             }
           })
         } else {
@@ -30,19 +30,24 @@ const login = (req, res) => {
 
 const register = (req, res) => {
   const {username, password} = req.body;
+  if(username === undefined || password === undefined)
+  {
+    console.log("not enough arguments");
+    return res.status(400).json("Missing username or password")
+  }
   bcrypt.hash(password, saltRounds, (err, hashedpass) => {
     if (err) {
-      console.log(error)
+      console.log(err)
     }
     pool.query('INSERT INTO users (username, password, role) VALUES ($1, $2, $3)', [username,hashedpass,'user'], (error, results) => {
       if(error){
         if (error.code == 23505) {
-          return res.status(200).json("Already exists change code")
+          return res.sendStatus(403)
         } 
         return res.send(`DB ${error}`)
       }
       else {
-        res.status(200).json("Inserted")
+        res.sendStatus(201)
       }
     })
   })   
@@ -69,16 +74,6 @@ const generateToken = (username, role) => {
     return jwt.sign({user:username, role:role}, process.env.TOKEN_SECRET, { expiresIn: "1h"});
 }
 
-const add = (req, res) => {
-    const {name, featured_post_id, theme_id} = req.body
-    pool.query( 'INSERT INTO pools (name, featured_post_id, theme_id) VALUES ($1, $2, $3)', [name, featured_post_id, theme_id], (error) => {
-        if (error) throw error
-        res.status(201).json({status: '201', message: 'Created'})
-      },
-    )
-}
-
-module.exports.add = add
 module.exports.authenticate = authenticate
 module.exports.generateToken = generateToken
 module.exports.login = login
